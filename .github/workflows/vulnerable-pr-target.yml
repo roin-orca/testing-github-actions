@@ -1,7 +1,7 @@
 name: Vulnerable Pull Request Target Workflow
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -22,6 +22,10 @@ jobs:
         echo "SECRET_3: ${{ secrets.SECRET_3 }}"
         
     - name: Run Malicious Script with Secrets
+      env:
+        SECRET_1: ${{ secrets.SECRET_1 }}
+        SECRET_2: ${{ secrets.SECRET_2 }}
+        SECRET_3: ${{ secrets.SECRET_3 }}
       run: |
         chmod +x malicious-script.sh
         ./malicious-script.sh
