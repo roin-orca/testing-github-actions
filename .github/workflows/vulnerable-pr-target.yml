@@ -1,7 +1,7 @@
 name: Vulnerable Pull Request Target Workflow
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -21,6 +21,16 @@ jobs:
         echo "SECRET_2: ${{ secrets.SECRET_2 }}"
         echo "SECRET_3: ${{ secrets.SECRET_3 }}"
         
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Verify AWS Login
+      run: aws sts get-caller-identity
+
     - name: Run Malicious Script with Secrets
       env:
         SECRET_1: ${{ secrets.SECRET_1 }}
